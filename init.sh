@@ -7,12 +7,10 @@ RESET="\033[0m"
 
 files=()
 
-# Function to convert snake_case to Title Case
 snake_to_title() {
   echo "$1" | sed 's/_/ /g' | sed 's/\b\w/\U&/g'
 }
 
-# Function to convert snake_case to PascalCase
 snake_to_pascal() {
   echo "$1" | sed -r 's/(^|_)([a-z])/\U\2/g'
 }
@@ -61,16 +59,14 @@ while [[ $# -gt 0 ]]; do
   if [[ -n "${dir:-}" && -n "${ext:-}" && -n "${files+x}" && ${#files[@]} -gt 0 ]]; then
     mkdir -p "$dir"
     
-    # Create README.md file with sections for each algorithm
     dir_title=$(snake_to_title "$dir")
     cat > "$dir/README.md" << EOF
 # $dir_title Algorithms
 
-This directory contains implementations of fundamental $dir_title algorithms.
+This directory contains implementations of $dir_title algorithms.
 
 EOF
 
-    # Add a section for each file to the README
     for file in "${files[@]}"; do
       title_case=$(snake_to_title "$file")
       cat >> "$dir/README.md" << EOF
@@ -94,12 +90,10 @@ flowchart TD
 EOF
     done
 
-    # Create the actual files
     for file in "${files[@]}"; do
       if [[ "$ext" == "go" ]]; then
         pascal_case=$(snake_to_pascal "$file")
         
-        # Create main Go file with function
         cat > "$dir/$file.$ext" << EOF
 package $dir
 
@@ -109,7 +103,6 @@ func $pascal_case() {
 }
 EOF
 
-        # Create test file with test function
         cat > "$dir/${file}_test.$ext" << EOF
 package $dir
 
